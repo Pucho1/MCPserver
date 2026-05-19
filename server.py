@@ -1,28 +1,46 @@
-from mcp.server.fastmcp import FastMCP, Context
+from fastmcp import FastMCP, Context
 from mcp.types import SamplingMessage, TextContent
+from fastmcp.server.lifespan import lifespan
 
 from pathlib import Path
+import httpx
 
-mcp = FastMCP(name="Filesystem-server")
 
-@mcp.tool()
-async def summarize(text_to_summarize: str, ctx: Context):
+@lifespan
+async def app_lifespan(server):
 
+    print("Creando cliente HTTP compartido")
+
+    client = httpx.AsyncClient()
+
+    yield {
+        "http_client": client
+    }
+
+    print("Cerrando cliente HTTP")
+
+    await client.aclose()
+
+mcp = FastMCP(name="Filesystem-server", lifespan=app_lifespan)
+
+
+
+
+# -----PROMPTS ------
+
+@mcp.prompt()
+def summarize_file(filename: str) -> str:
     """
-        Resumen texto
+    Generate a summarization prompt for a file.
     """
 
-    result = await ctx.sample(
-        prompt=f"Por favor, resume el siguiente texto de forma concisa: {text_to_summarize}",
-        max_tokens=500
-    )
-    
-    # result ya es un objeto que contiene la respuesta procesada por el cliente
-    # FastMCP suele mapear el contenido directamente o como una lista de contenidos
-    if hasattr(result, "content") and result.content:
-        return result.content[0].text
-    
-    return str(result)
+    return f"Please summarize the contents of {filename}"
+
+
+
+
+
+# ----- TOOLS ------
 
 @mcp.tool()
 async def list_files(path: str = ".") -> list[str]:
@@ -37,6 +55,9 @@ async def list_files(path: str = ".") -> list[str]:
 
 
 
+
+
+
 # -----RESOUCERS ------
 
 
@@ -47,6 +68,8 @@ async def current_directory() -> str:
     """
 
     return str(Path.cwd())
+
+
 
 
 if __name__ == "__main__":

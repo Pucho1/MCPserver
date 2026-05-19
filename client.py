@@ -7,6 +7,10 @@ from mcp.types import (
     TextContent,
     SamplingMessage,
 )
+from fastmcp.server.middleware import (
+    Middleware,
+    MiddlewareContext
+)
 
 import asyncio
 from anthropic import AsyncAnthropic
@@ -80,19 +84,37 @@ async def run():
             # Conectamos e inicializamos el canal IPC con el servidor FastMCP
             await session.initialize()
 
-            print("\n--- Listado de todas mis TOOLS ---\n")
-            tools = await session.list_tools()
-            pprint(tools.model_dump(), indent=2)
+            # print("\n--- Listado de todas mis TOOLS ---\n")
+            # tools = await session.list_tools()
+            # pprint(tools.model_dump(), indent=2)
 
-            print("--- PROBANDO TOOL: list_files ---")
-            files_result = await session.call_tool(
-                name="list_files",
-                arguments={"path": "."} # Pasa los argumentos que espera la función en el servidor
-            )
+            # print("--- PROBANDO TOOL: list_files ---")
+            # files_result = await session.call_tool(
+            #     name="list_files",
+            #     arguments={"path": "."} # Pasa los argumentos que espera la función en el servidor
+            # )
 
-            # El resultado viene envuelto en una estructura de contenido, extraemos el texto/datos
-            print("Archivos encontrados:")
-            print(files_result.content[0].text)
+            # # El resultado viene envuelto en una estructura de contenido, extraemos el texto/datos
+            # print("Archivos encontrados:")
+            # print(files_result.content[0].text)
+
+
+            # print("\n--- Listado de todos mis resources ---\n")
+            # resources = await session.list_resources()
+            # pprint(resources.model_dump(), indent=2)
+
+            # print("\n--- Datos de mi resource ---\n")
+            # resource = await session.read_resource("filesystem://cwd")
+            # pprint(resource.model_dump(), indent=2)
+
+
+            print("\n--- Listado de todos mis prompts ---\n")
+            prompts = await session.list_prompts()
+            pprint(prompts.model_dump(), indent=2)
+
+            print("\n--- Texto de mi prompt ---\n")
+            propmt = await session.get_prompt('summarize_file', arguments={"filename": "notes.txt"})
+            pprint(propmt.model_dump(), indent=2)
 
 
  
