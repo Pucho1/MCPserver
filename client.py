@@ -1,5 +1,3 @@
-import asyncio
-from anthropic import AsyncAnthropic
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 from mcp.client.session import RequestContext
@@ -10,5 +8,113 @@ from mcp.types import (
     SamplingMessage,
 )
 
-antropic_client = AsyncAnthropic()
-model = "claude-sonnet-4.0"
+import asyncio
+from anthropic import AsyncAnthropic
+from dotenv import load_dotenv
+from pprint import pprint
+import json
+
+load_dotenv()  # Esto carga las variables del archivo .env antes de arrancar el cliente MCP
+
+
+anthropic_client = AsyncAnthropic()
+model = "claude-sonnet-4-5"
+
+server_params = StdioServerParameters(
+    command="uv",
+    args=["run", "server.py"],
+)
+
+
+async def chat(input_messages: list[SamplingMessage], max_tokens=4000):
+    messages = []
+    for msg in input_messages:
+        if msg.role == "user" and msg.content.type == "text":
+            content = (
+                msg.content.text
+                if hasattr(msg.content, "text")
+                else str(msg.content)
+            )
+            messages.append({"role": "user", "content": content})
+        elif msg.role == "assistant" and msg.content.type == "text":
+            content = (
+                msg.content.text
+                if hasattr(msg.content, "text")
+                else str(msg.content)
+            )
+            messages.append({"role": "assistant", "content": content})
+
+    response = await anthropic_client.messages.create(
+        model=model,
+        messages=messages,
+        max_tokens=max_tokens,
+    )
+
+    text = "".join([p.text for p in response.content if p.type == "text"])
+    return text
+
+
+async def sampling_callback(
+    context: RequestContext, params: CreateMessageRequestParams
+):
+    # Call Claude using the Anthropic SDK
+    text = await chat(params.messages)
+
+    return CreateMessageResult(
+        role="assistant",
+        model=model,
+        content=TextContent(type="text", text=text),
+    )
+
+
+async def run():
+    
+    async with stdio_client(server_params) as (read, write):
+
+        async with ClientSession(
+            read,
+            write, 
+            sampling_callback=sampling_callback
+        ) as session:
+            
+            # Conectamos e inicializamos el canal IPC con el servidor FastMCP
+            await session.initialize()
+
+            print("\n--- Listado de todas mis TOOLS ---\n")
+            tools = await session.list_tools()
+            pprint(tools.model_dump(), indent=2)
+
+            print("--- PROBANDO TOOL: list_files ---")
+            files_result = await session.call_tool(
+                name="list_files",
+                arguments={"path": "."} # Pasa los argumentos que espera la función en el servidor
+            )
+
+            # El resultado viene envuelto en una estructura de contenido, extraemos el texto/datos
+            print("Archivos encontrados:")
+            print(files_result.content[0].text)
+
+
+ 
+
+
+if __name__ == "__main__":
+    import asyncio
+
+    asyncio.run(run())
+
+
+
+#    print("\n--- PROBANDO TOOL: summarize (con arquitectura Sampling inversa) ---")
+
+#     # Llamamos a la herramienta que le pedirá al cliente que "piense"
+#     summary_result = await session.call_tool(
+#         name="summarize",
+#         arguments={"text_to_summarize": "El protocolo MCP (Model Context Protocol) es "
+#             "una especificación abierta diseñada por Anthropic para estandarizar la forma en que"
+#             " las aplicaciones conectan con fuentes de datos y herramientas de desarrollo de manera segura y eficiente."
+#         }
+#     )
+
+#     print("Resultado del resumen devuelto por el servidor:")
+#     print(summary_result.content[0].text)
