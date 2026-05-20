@@ -7,16 +7,14 @@ from mcp.types import (
     TextContent,
     SamplingMessage,
 )
-from fastmcp.server.middleware import (
-    Middleware,
-    MiddlewareContext
-)
+
 
 import asyncio
 from anthropic import AsyncAnthropic
 from dotenv import load_dotenv
 from pprint import pprint
 import json
+import sys
 
 load_dotenv()  # Esto carga las variables del archivo .env antes de arrancar el cliente MCP
 
@@ -73,7 +71,7 @@ async def sampling_callback(
 
 async def run():
     
-    async with stdio_client(server_params) as (read, write):
+    async with stdio_client(server_params, errlog=sys.stdout) as (read, write):
 
         async with ClientSession(
             read,
@@ -84,19 +82,28 @@ async def run():
             # Conectamos e inicializamos el canal IPC con el servidor FastMCP
             await session.initialize()
 
-            # print("\n--- Listado de todas mis TOOLS ---\n")
-            # tools = await session.list_tools()
-            # pprint(tools.model_dump(), indent=2)
+            print("\n--- Listado de todas mis TOOLS ---\n")
+            tools = await session.list_tools()
+            pprint(tools.model_dump(), indent=2)
 
-            # print("--- PROBANDO TOOL: list_files ---")
-            # files_result = await session.call_tool(
-            #     name="list_files",
-            #     arguments={"path": "."} # Pasa los argumentos que espera la función en el servidor
-            # )
+            print("--- PROBANDO TOOL: fetch_page ---")
+            files_result = await session.call_tool(
+                name="fetch_page",
+                arguments={"url": "https://httpbin.org/get"} # Pasa los argumentos que espera la función en el servidor
+            )
 
-            # # El resultado viene envuelto en una estructura de contenido, extraemos el texto/datos
-            # print("Archivos encontrados:")
-            # print(files_result.content[0].text)
+            # El resultado viene envuelto en una estructura de contenido, extraemos el texto/datos
+            print("Archivos encontrados:")
+            pprint(files_result.content[0].text)
+
+            result = await session.call_tool(
+                "read_file",
+                arguments={
+                    "path": "README.md"
+                }
+            )
+
+            print(result.content[0].text)
 
 
             # print("\n--- Listado de todos mis resources ---\n")
@@ -108,13 +115,13 @@ async def run():
             # pprint(resource.model_dump(), indent=2)
 
 
-            print("\n--- Listado de todos mis prompts ---\n")
-            prompts = await session.list_prompts()
-            pprint(prompts.model_dump(), indent=2)
+            # print("\n--- Listado de todos mis prompts ---\n")
+            # prompts = await session.list_prompts()
+            # pprint(prompts.model_dump(), indent=2)
 
-            print("\n--- Texto de mi prompt ---\n")
-            propmt = await session.get_prompt('summarize_file', arguments={"filename": "notes.txt"})
-            pprint(propmt.model_dump(), indent=2)
+            # print("\n--- Texto de mi prompt ---\n")
+            # propmt = await session.get_prompt('summarize_file', arguments={"filename": "notes.txt"})
+            # pprint(propmt.model_dump(), indent=2)
 
 
  

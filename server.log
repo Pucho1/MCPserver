@@ -1,0 +1,16 @@
+2026-05-19 21:59:33,664 | INFO | Creando cliente HTTP compartido
+2026-05-19 21:59:33,897 | INFO | ANTES -> method=tools/call tool=list_files
+2026-05-19 21:59:33,899 | INFO | DESPUES -> method=tools/call tool=list_files
+2026-05-19 21:59:33,902 | INFO | Cerrando cliente HTTP
+2026-05-19 22:06:26,254 | INFO | Creando cliente HTTP compartido
+2026-05-19 22:06:26,502 | INFO | ANTES -> method=tools/call tool=list_files
+2026-05-19 22:06:26,504 | INFO | DESPUES -> method=tools/call tool=list_files
+2026-05-19 22:06:26,509 | INFO | Cerrando cliente HTTP
+2026-05-20 09:00:13,026 | INFO | Creando cliente HTTP compartido
+2026-05-20 09:00:13,238 | INFO | ANTES -> method=tools/call tool=test_dependency
+2026-05-20 09:00:13,241 | INFO | DESPUES -> method=tools/call tool=test_dependency
+2026-05-20 09:00:13,245 | INFO | Cerrando cliente HTTP
+2026-05-20 09:25:52,640 | INFO | Creando cliente HTTP compartido
+2026-05-20 09:25:52,896 | INFO | ANTES -> method=tools/call tool=fetch_page
+2026-05-20 09:25:53,487 | INFO | DESPUES -> method=tools/call tool=fetch_page
+2026-05-20 09:25:53,490 | INFO | Cerrando cliente HTTP
