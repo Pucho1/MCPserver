@@ -86,20 +86,24 @@ async def run():
             tools = await session.list_tools()
             pprint(tools.model_dump(), indent=2)
 
-            print("--- PROBANDO TOOL: fetch_page ---")
-            files_result = await session.call_tool(
-                name="fetch_page",
-                arguments={"url": "https://httpbin.org/get"} # Pasa los argumentos que espera la función en el servidor
-            )
 
+            print("--- PROBANDO TOOL: read_file ---")
+            files_result = await session.call_tool(
+                name="read_file",
+                arguments={"path": "README.md"} # Pasa los argumentos que espera la función en el servidor
+            )
             # El resultado viene envuelto en una estructura de contenido, extraemos el texto/datos
             print("Archivos encontrados:")
             pprint(files_result.content[0].text)
 
+
+
+            print("--- PROBANDO TOOL: write_file ---")
             result = await session.call_tool(
-                "read_file",
+                "write_file",
                 arguments={
-                    "path": "README.md"
+                    "path": "notes.txt",
+                    "content": "Hola MCP"
                 }
             )
 
