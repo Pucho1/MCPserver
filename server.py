@@ -12,7 +12,7 @@ import sys
 
 
 
-# creo el archivo para guardar mis logs 
+# creo un archivo para guardar mis logs 
 logger = logging.getLogger("mcp_server")
 logger.setLevel(logging.INFO)
 
@@ -134,7 +134,7 @@ async def read_file(path: str) -> str:
 @mcp.tool()
 async def write_file(
     path: str,
-    content: str
+    content: str,
 ) -> str:
     """
     Write content into a file.
