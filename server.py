@@ -50,8 +50,8 @@ class DebugMiddleware(Middleware):
         call_next
     ):
         tool_name = getattr(context.message, "name", "<sin nombre>")
-        before_message = f"ANTES -> method={context.method} tool={tool_name}"
         
+        before_message = f"ANTES -> method={context.method} tool={tool_name}"
         logger.info(before_message)
 
         # print(
