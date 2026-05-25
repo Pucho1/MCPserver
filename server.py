@@ -170,7 +170,7 @@ async def create_directory(
     return "Directory created"
 
 
-# ----- FILESYSTEM ------
+# ----- REST API ------
 
 @mcp.tool()
 async def get_post(
@@ -215,27 +215,6 @@ async def get_post(
 
     logger.info(response)
     return response
-
-
-# --------TEST---------
-
-@mcp.tool()
-async def fetch_page(
-    url: str,
-    ctx: Context
-):
-
-    client = ctx.lifespan_context["http_client"]
-
-    response = await client.get(url)
-
-    return {
-        "status": response.status_code,
-        "size": len(response.text)
-    }
-
-
-
 
 
 # -----RESOUCERS ------
