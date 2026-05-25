@@ -107,6 +107,8 @@ def summarize_file(filename: str) -> str:
 
 # ----- TOOLS ------
 
+# ----- FILESYSTEM ------
+
 @mcp.tool()
 async def list_files(path: str = ".") -> list[str]:
     # De aqui sale la descripcion de la tool
@@ -168,6 +170,51 @@ async def create_directory(
     return "Directory created"
 
 
+# ----- FILESYSTEM ------
+
+@mcp.tool()
+async def get_post(
+    post_id: int,
+    context: Context
+) -> dict:
+    """
+    Fetch a post from a post id.
+    """
+    try:
+    
+        client = context.lifespan_context["http_client"]
+
+        response_api = await client.get(
+            f"https://jsonplaceholder.typicode.com/posts/{post_id}", timeout=10.0
+        )
+
+
+        if response_api.status_code != 200:
+            logger.error(f"Error fetching post with id {post_id}: {response_api.status_code}")
+            raise httpx.HTTPError(f"Error fetching post with id {post_id}: {response_api.status_code}")
+        
+        payload = response_api.json()
+
+        response = { "body": payload.get("body"),  "title": payload.get("title") }
+
+    except httpx.TimeoutException:
+        logger.error(f"Error: Timeout when fetching post with id {post_id}")
+
+        raise httpx.TimeoutException(f"Timeout when fetching post with id {post_id}")
+
+    except httpx.ConnectError:
+        logger.error(f"Error: Connection error when fetching post with id {post_id}")
+
+        raise httpx.ConnectError(f"Connection error when fetching post with id {post_id}")
+
+    except Exception as e:
+        logger.error(f"Error: Unexpected error when fetching post with id {post_id} - {str(e)}")
+
+        raise Exception(f"Unexpected error when fetching post with id {post_id} - {str(e)}")
+    
+
+    logger.info(response)
+    return response
 
 
 # --------TEST---------

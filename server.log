@@ -14,3 +14,56 @@
 2026-05-20 09:25:52,896 | INFO | ANTES -> method=tools/call tool=fetch_page
 2026-05-20 09:25:53,487 | INFO | DESPUES -> method=tools/call tool=fetch_page
 2026-05-20 09:25:53,490 | INFO | Cerrando cliente HTTP
+2026-05-25 19:21:58,788 | INFO | Creando cliente HTTP compartido
+2026-05-25 19:21:59,024 | INFO | ANTES -> method=tools/call tool=read_file
+2026-05-25 19:21:59,033 | INFO | DESPUES -> method=tools/call tool=read_file
+2026-05-25 19:21:59,036 | INFO | ANTES -> method=tools/call tool=get_post
+2026-05-25 19:21:59,097 | INFO | <Response [200 OK]>
+2026-05-25 19:21:59,097 | INFO | DESPUES -> method=tools/call tool=get_post
+2026-05-25 19:21:59,100 | INFO | Cerrando cliente HTTP
+2026-05-25 19:23:18,246 | INFO | Creando cliente HTTP compartido
+2026-05-25 19:23:18,488 | INFO | ANTES -> method=tools/call tool=get_post
+2026-05-25 19:23:18,543 | INFO | <Response [200 OK]>
+2026-05-25 19:23:18,543 | INFO | DESPUES -> method=tools/call tool=get_post
+2026-05-25 19:23:18,545 | INFO | Cerrando cliente HTTP
+2026-05-25 19:24:41,708 | INFO | Creando cliente HTTP compartido
+2026-05-25 19:24:41,949 | INFO | ANTES -> method=tools/call tool=get_post
+2026-05-25 19:24:42,000 | INFO | {'userId': 1, 'id': 1, 'title': 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit', 'body': 'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto'}
+2026-05-25 19:24:42,000 | INFO | DESPUES -> method=tools/call tool=get_post
+2026-05-25 19:24:42,003 | INFO | Cerrando cliente HTTP
+2026-05-25 19:30:46,532 | INFO | Creando cliente HTTP compartido
+2026-05-25 19:30:46,802 | INFO | ANTES -> method=tools/call tool=get_post
+2026-05-25 19:30:46,856 | INFO | {'body': 'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto', 'title': 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit'}
+2026-05-25 19:30:46,856 | INFO | DESPUES -> method=tools/call tool=get_post
+2026-05-25 19:30:46,859 | INFO | Cerrando cliente HTTP
+2026-05-25 19:37:51,999 | INFO | Creando cliente HTTP compartido
+2026-05-25 19:37:52,249 | INFO | Cerrando cliente HTTP
+2026-05-25 19:40:11,365 | INFO | Creando cliente HTTP compartido
+2026-05-25 19:40:11,593 | INFO | Cerrando cliente HTTP
+2026-05-25 19:40:58,368 | INFO | Creando cliente HTTP compartido
+2026-05-25 19:40:58,594 | INFO | ANTES -> method=tools/call tool=get_post
+2026-05-25 19:40:58,611 | INFO | Cerrando cliente HTTP
+2026-05-25 19:53:29,401 | INFO | Creando cliente HTTP compartido
+2026-05-25 19:53:29,628 | INFO | ANTES -> method=tools/call tool=get_post
+2026-05-25 19:53:29,634 | INFO | Cerrando cliente HTTP
+2026-05-25 19:53:50,451 | INFO | Creando cliente HTTP compartido
+2026-05-25 19:53:50,677 | INFO | ANTES -> method=tools/call tool=get_post
+2026-05-25 19:53:50,731 | INFO | Fetching post with id 1 - response api: <Response [200 OK]>
+2026-05-25 19:53:50,731 | INFO | {'body': 'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto', 'title': 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit'}
+2026-05-25 19:53:50,767 | INFO | DESPUES -> method=tools/call tool=get_post
+2026-05-25 19:53:50,770 | INFO | Cerrando cliente HTTP
+2026-05-25 19:59:43,040 | INFO | Creando cliente HTTP compartido
+2026-05-25 19:59:43,268 | INFO | ANTES -> method=tools/call tool=get_post
+2026-05-25 19:59:43,328 | INFO | {'body': 'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto', 'title': 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit'}
+2026-05-25 19:59:43,328 | INFO | DESPUES -> method=tools/call tool=get_post
+2026-05-25 19:59:43,331 | INFO | Cerrando cliente HTTP
+2026-05-25 20:00:18,626 | INFO | Creando cliente HTTP compartido
+2026-05-25 20:00:18,851 | INFO | ANTES -> method=tools/call tool=get_post
+2026-05-25 20:00:19,249 | ERROR | Error fetching post with id 1213131313: 404
+2026-05-25 20:00:19,249 | ERROR | Error: Unexpected error when fetching post with id 1213131313 - Error fetching post with id 1213131313: 404
+2026-05-25 20:00:19,363 | INFO | Cerrando cliente HTTP
+2026-05-25 20:01:14,942 | INFO | Creando cliente HTTP compartido
+2026-05-25 20:01:15,170 | INFO | ANTES -> method=tools/call tool=get_post
+2026-05-25 20:01:15,571 | INFO | {'body': 'itaque id aut magnam\npraesentium quia et ea odit et ea voluptas et\nsapiente quia nihil amet occaecati quia id voluptatem\nincidunt ea est distinctio odio', 'title': 'in quibusdam tempore odit est dolorem'}
+2026-05-25 20:01:15,571 | INFO | DESPUES -> method=tools/call tool=get_post
+2026-05-25 20:01:15,573 | INFO | Cerrando cliente HTTP

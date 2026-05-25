@@ -16,6 +16,8 @@ from pprint import pprint
 import json
 import sys
 
+from server import get_post
+
 load_dotenv()  # Esto carga las variables del archivo .env antes de arrancar el cliente MCP
 
 
@@ -87,30 +89,35 @@ async def run():
             pprint(tools.model_dump(), indent=2)
 
 
-            print("--- PROBANDO TOOL: read_file ---")
-            files_result = await session.call_tool(
-                name="read_file",
-                arguments={"path": "README.md"} # Pasa los argumentos que espera la función en el servidor
-            )
-            # El resultado viene envuelto en una estructura de contenido, extraemos el texto/datos
-            print("Archivos encontrados:")
-            pprint(files_result.content[0].text)
+            # print("--- PROBANDO TOOL: read_file ---")
+            # files_result = await session.call_tool(
+            #     name="read_file",
+            #     arguments={"path": "README.md"} # Pasa los argumentos que espera la función en el servidor
+            # )
+            # # El resultado viene envuelto en una estructura de contenido, extraemos el texto/datos
+            # print("Archivos encontrados:")
+            # pprint(files_result.content[0].text)
 
 
 
-            print("--- PROBANDO TOOL: write_file ---")
+
+            # print(result.content[0].text)
+
+            print("--- PROBANDO TOOL: get_post ---")
             result = await session.call_tool(
-                "write_file",
+                "get_post",
                 arguments={
-                    "path": "notes.txt",
-                    "content": "Hola MCP"
+                    "post_id": 12
                 }
             )
 
             print(result.content[0].text)
 
 
-            # print("\n--- Listado de todos mis resources ---\n")
+
+
+
+            # print("\n--- Listado de todos mis resources    ---\n")
             # resources = await session.list_resources()
             # pprint(resources.model_dump(), indent=2)
 
@@ -127,7 +134,15 @@ async def run():
             # propmt = await session.get_prompt('summarize_file', arguments={"filename": "notes.txt"})
             # pprint(propmt.model_dump(), indent=2)
 
-
+            
+            # print("--- PROBANDO TOOL: write_file ---")
+            # result = await session.call_tool(
+            #     "write_file",
+            #     arguments={
+            #         "path": "notes.txt",
+            #         "content": "Hola MCP"
+            #     }
+            # )
  
 
 
