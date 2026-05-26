@@ -16,7 +16,7 @@ from pprint import pprint
 import json
 import sys
 
-from server import get_post
+from server import get_post, update_note
 
 load_dotenv()  # Esto carga las variables del archivo .env antes de arrancar el cliente MCP
 
@@ -104,17 +104,55 @@ async def run():
             # print(result.content[0].text)
 
 
-
-
-            print("--- PROBANDO TOOL: create_note ---")
+            print("--- PROBANDO TOOL: get_list_notes ---")
             result = await session.call_tool(
-                "create_note",
-                arguments={
-                    "content": "Esta es una nueva nota."
-                }
+                "get_list_notes",
+                arguments={}
             )
 
-            print(result.content[0].text)
+            print(result.content[0].text)   
+
+
+            
+            print("--- PROBANDO TOOL: delete_note ---")
+            new_result = await session.call_tool(
+                "delete_note",
+                arguments={"note_id": 3}
+            )
+
+            print(new_result.content[0].text)
+
+
+
+            # print("--- PROBANDO TOOL: update_note ---")
+            # new_result = await session.call_tool(
+            #     "update_note",
+            #     arguments={"note_id": 1, "new_content": "Este es el nuevo contenido de la nota."}
+            # )
+
+            # print(new_result.content[0].text)
+
+
+            # print("--- PROBANDO TOOL: get_single_note ---")
+            # new_result = await session.call_tool(
+            #     "get_single_note",
+            #     arguments={"note_id": 1}
+            # )
+
+            # print(new_result.content[0].text)
+
+
+
+
+            # print("--- PROBANDO TOOL: create_note ---")
+            # result = await session.call_tool(
+            #     "create_note",
+            #     arguments={
+            #         "content": "Esta es una nueva nota."
+            #     }
+            # )
+
+            # print(result.content[0].text)
 
             # print("--- PROBANDO TOOL: get_post ---")
             # result = await session.call_tool(

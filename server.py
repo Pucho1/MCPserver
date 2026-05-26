@@ -254,7 +254,7 @@ async def get_post(
 # ----- SQLITE ------
 
 @mcp.tool()
-async def create_note(content: str, context: Context) -> str:
+async def create_note(content: str, context: Context,) -> str:
     """
     Create a note in the database.
     """
@@ -270,10 +270,116 @@ async def create_note(content: str, context: Context) -> str:
 
     return f"Note created with id {cursor.lastrowid}"
 
+@mcp.tool()
+async def get_single_note(
+    note_id:int,
+    context:Context,
+) -> dict:
+    """
+    Fetch a note from the database.
+    """
+
+    # accedo a la conexion de la base de datos que cree en el lifespan a traves del context.lifespan_context 
+    # y lo guardo en una variable para usarlo en esta funcion
+    db_conn = context.lifespan_context["db_connection"] 
+
+    # hago la consulta a la base de datos de forma asíncrona usando aiosqlite
+    cursor = await db_conn.execute(
+        "SELECT * FROM notes WHERE id = ?",
+        (note_id,)
+    )
+
+    row = await cursor.fetchone()
+
+    if row is None:
+       raise ValueError(f"No se encontró ninguna nota con id {note_id}")
+
+    return {"id": row[0], "content": row[1]}
+
+@mcp.tool()
+async def get_list_notes(context:Context,) -> dict:
+    """
+    Fetch all notes from the database.
+    """
+
+    # accedo a la conexion de la base de datos que cree en el lifespan a traves del context.lifespan_context 
+    # y lo guardo en una variable para usarlo en esta funcion
+    db_conn = context.lifespan_context["db_connection"] 
+
+    # hago la consulta a la base de datos de forma asíncrona usando aiosqlite
+    cursor = await db_conn.execute(
+        "SELECT * FROM notes"
+    )
+
+    rows = await cursor.fetchall()
 
 
+    if not rows:
+       raise ValueError("No se encontró ninguna nota")
+
+    return {"notes": [{"id": row[0], "content": row[1]} for row in rows]}
 
 
+@mcp.tool()
+async def update_note(
+    note_id: int,
+    new_content: str,
+    context: Context,
+) -> str:
+    
+    """
+    Update a note in the database.
+    """
+    db_conn = context.lifespan_context["db_connection"]
+
+    cursor  = await db_conn.execute(
+        """
+            UPDATE notes
+            SET
+            content=?,
+            updated_at=
+            datetime(
+                'now',
+                'localtime'
+            )
+            WHERE id=?
+        """,
+        (new_content, note_id)
+    )
+
+
+    if cursor.rowcount == 0:
+        raise ValueError(
+            f"Nota {note_id} no encontrada"
+        )
+    
+    await db_conn.commit()
+
+    return f"Note updated with id {note_id}"
+
+@mcp.tool()
+async def delete_note(
+    note_id: int,
+    context: Context,
+) -> str:
+    """
+    Delete a note from the database.
+    """
+    db_conn = context.lifespan_context["db_connection"]
+
+    cursor = await db_conn.execute(
+        "DELETE FROM notes WHERE id = ?",
+        (note_id,)
+    )
+
+    if cursor.rowcount == 0:
+        raise ValueError(
+            f"Nota {note_id} no encontrada"
+        )
+
+    await db_conn.commit()
+
+    return f"Note deleted with id {note_id}"
 
 
 # -----RESOUCERS ------
