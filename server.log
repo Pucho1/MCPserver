@@ -67,3 +67,14 @@
 2026-05-25 20:01:15,571 | INFO | {'body': 'itaque id aut magnam\npraesentium quia et ea odit et ea voluptas et\nsapiente quia nihil amet occaecati quia id voluptatem\nincidunt ea est distinctio odio', 'title': 'in quibusdam tempore odit est dolorem'}
 2026-05-25 20:01:15,571 | INFO | DESPUES -> method=tools/call tool=get_post
 2026-05-25 20:01:15,573 | INFO | Cerrando cliente HTTP
+2026-05-26 11:06:02,728 | INFO | Creando cliente compartiddos para el servidor
+2026-05-26 11:06:02,967 | INFO | ANTES -> method=tools/call tool=create_note
+2026-05-26 11:06:03,031 | INFO | Cerrando cliente compartidos para el servidor
+2026-05-26 11:09:04,224 | INFO | Creando cliente compartiddos para el servidor
+2026-05-26 11:09:04,462 | INFO | ANTES -> method=tools/call tool=create_note
+2026-05-26 11:09:04,466 | INFO | DESPUES -> method=tools/call tool=create_note
+2026-05-26 11:09:04,469 | INFO | Cerrando cliente compartidos para el servidor
+2026-05-26 11:14:12,233 | INFO | Creando cliente compartiddos para el servidor
+2026-05-26 11:14:12,470 | INFO | ANTES -> method=tools/call tool=create_note
+2026-05-26 11:14:12,474 | INFO | DESPUES -> method=tools/call tool=create_note
+2026-05-26 11:14:12,477 | INFO | Cerrando cliente compartidos para el servidor

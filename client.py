@@ -103,15 +103,28 @@ async def run():
 
             # print(result.content[0].text)
 
-            print("--- PROBANDO TOOL: get_post ---")
+
+
+
+            print("--- PROBANDO TOOL: create_note ---")
             result = await session.call_tool(
-                "get_post",
+                "create_note",
                 arguments={
-                    "post_id": 12
+                    "content": "Esta es una nueva nota."
                 }
             )
 
             print(result.content[0].text)
+
+            # print("--- PROBANDO TOOL: get_post ---")
+            # result = await session.call_tool(
+            #     "get_post",
+            #     arguments={
+            #         "post_id": 12
+            #     }
+            # )
+
+            # print(result.content[0].text)
 
 
 

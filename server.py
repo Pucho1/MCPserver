@@ -213,7 +213,7 @@ async def get_post(
     """
     try:
     
-        client = context.lifespan_context["BD_client"]
+        client = context.lifespan_context["http_client"]
 
         response_api = await client.get(
             f"https://jsonplaceholder.typicode.com/posts/{post_id}", timeout=10.0
@@ -246,6 +246,30 @@ async def get_post(
 
     logger.info(response)
     return response
+
+
+
+
+
+# ----- SQLITE ------
+
+@mcp.tool()
+async def create_note(content: str, context: Context) -> str:
+    """
+    Create a note in the database.
+    """
+
+    db_conn = context.lifespan_context["db_connection"]
+
+    cursor = await db_conn.execute(
+        "INSERT INTO notes (content) VALUES (?)",
+        (content,)
+    )
+
+    await db_conn.commit()
+
+    return f"Note created with id {cursor.lastrowid}"
+
 
 
 
