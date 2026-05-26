@@ -1,3 +1,4 @@
+
 from fastmcp import FastMCP, Context
 from fastmcp.server.lifespan import lifespan
 from fastmcp.server.middleware import (
@@ -7,6 +8,7 @@ from fastmcp.server.middleware import (
 
 from pathlib import Path
 import httpx
+import aiosqlite
 import logging
 import sys
 
@@ -26,18 +28,46 @@ if not logger.handlers:
 
 
 @lifespan
-async def app_lifespan(server):
+async def app_lifespan(server: FastMCP):
 
-    logger.info("Creando cliente HTTP compartido")
+    """
+    Controla el arranque y apagado del servidor MCP.
+    Maneja la conexión a la base de datos de forma concurrente y segura.
+    """
 
+    logger.info("Creando cliente compartiddos para el servidor")
+
+    # 1. Creamos el cliente HTTP asíncrono
     client = httpx.AsyncClient()
 
+    # 2. Conectamos de forma asíncrona a SQLite con aiosqlite
+    db_conn = await aiosqlite.connect("notes.db")
+
+    # Habilitamos esto para poder interactuar con la BD de forma segura en entornos async
+    await db_conn.execute("PRAGMA journal_mode=WAL;")
+
+    # 3. Creamos la tabla de notas asíncronamente si no existe
+    await db_conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS notes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            content TEXT NOT NULL,
+            created_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime')),
+            updated_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))
+        )
+        """
+    )
+
+    await db_conn.commit()
+
     yield {
-        "http_client": client
+        "http_client": client,
+        "db_connection": db_conn
     }
 
-    logger.info("Cerrando cliente HTTP")
-
+    logger.info("Cerrando cliente compartidos para el servidor")
+    
+    await db_conn.close()
     await client.aclose()
 
 
@@ -84,7 +114,7 @@ class DebugMiddleware(Middleware):
 
 
 
-
+# Inicializamos el servidor registrando tu lifespan
 mcp = FastMCP(name="Filesystem-server", lifespan=app_lifespan)
 
 mcp.add_middleware(DebugMiddleware())
@@ -106,6 +136,7 @@ def summarize_file(filename: str) -> str:
 
 
 # ----- TOOLS ------
+
 
 # ----- FILESYSTEM ------
 
@@ -182,7 +213,7 @@ async def get_post(
     """
     try:
     
-        client = context.lifespan_context["http_client"]
+        client = context.lifespan_context["BD_client"]
 
         response_api = await client.get(
             f"https://jsonplaceholder.typicode.com/posts/{post_id}", timeout=10.0
@@ -215,6 +246,10 @@ async def get_post(
 
     logger.info(response)
     return response
+
+
+
+
 
 
 # -----RESOUCERS ------
