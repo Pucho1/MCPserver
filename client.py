@@ -98,29 +98,42 @@ async def run():
             # print("Archivos encontrados:")
             # pprint(files_result.content[0].text)
 
-
-
-
             # print(result.content[0].text)
 
+            
 
-            print("--- PROBANDO TOOL: get_list_notes ---")
-            result = await session.call_tool(
-                "get_list_notes",
+
+            # print("--- PROBANDO TOOL: get_list_notes ---")
+            # result = await session.call_tool(
+            #     "get_list_notes",
+            #     arguments={}
+            # )
+
+            # print(result.content[0].text)   
+
+
+
+                    
+            print("--- PROBANDO TOOL: run_git_status ---")
+            new_result = await session.call_tool(
+                "run_git_status",
                 arguments={}
             )
 
-            print(result.content[0].text)   
+            print(new_result.content[0].text)
+
+
+
 
 
             
-            print("--- PROBANDO TOOL: delete_note ---")
-            new_result = await session.call_tool(
-                "delete_note",
-                arguments={"note_id": 3}
-            )
+            # print("--- PROBANDO TOOL: delete_note ---")
+            # new_result = await session.call_tool(
+            #     "delete_note",
+            #     arguments={"note_id": 3}
+            # )
 
-            print(new_result.content[0].text)
+            # print(new_result.content[0].text)
 
 
 

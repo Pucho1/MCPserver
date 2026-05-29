@@ -1,4 +1,6 @@
 
+import asyncio
+import subprocess
 from fastmcp import FastMCP, Context
 from fastmcp.server.lifespan import lifespan
 from fastmcp.server.middleware import (
@@ -380,6 +382,48 @@ async def delete_note(
     await db_conn.commit()
 
     return f"Note deleted with id {note_id}"
+
+
+
+# ----- SHELL ------
+
+@mcp.tool()
+async def run_git_status() -> str:
+    """
+    Run git status command safely and return the output.
+    """
+
+    try:
+
+        result = await asyncio.to_thread(
+            subprocess.run,
+            ["git", "status"],
+            capture_output=True,
+            text=True,
+            timeout=5
+        )
+
+        if result.returncode != 0:
+
+            error_message = result.stderr.decode().strip()
+
+            raise Exception(
+                f"Error running git status: {error_message}"
+            )
+
+        return result.stdout.strip()
+
+    except asyncio.TimeoutError:
+
+        raise TimeoutError(
+            "git status command timed out"
+        )
+
+    except Exception as e:
+
+        raise Exception(
+            f"Unexpected error running git status: {str(e)}"
+        )
 
 
 # -----RESOUCERS ------
