@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from mcp_instance import mcp
+from core.mcp_instance import mcp
 
 from schemas.write_file import (
     WriteFileRequest
