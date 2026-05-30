@@ -15,6 +15,9 @@ import logging
 import sys
 
 
+from core.mcp_instance import mcp
+
+
 
 # creo un archivo para guardar mis logs 
 logger = logging.getLogger("mcp_server")
@@ -29,48 +32,49 @@ if not logger.handlers:
 
 
 
-@lifespan
-async def app_lifespan(server: FastMCP):
+# @lifespan
+# async def app_lifespan(server: FastMCP):
 
-    """
-    Controla el arranque y apagado del servidor MCP.
-    Maneja la conexión a la base de datos de forma concurrente y segura.
-    """
+#     """
+#     Controla el arranque y apagado del servidor MCP.
+#     gestor del ciclod e vida del servidor, se ejecuta al iniciar y cerrar el servidor.
+#     Maneja todas la conexiónes de forma concurrente y segura.
+#     """
 
-    logger.info("Creando cliente compartiddos para el servidor")
+#     logger.info("Creando cliente compartiddos para el servidor")
 
-    # 1. Creamos el cliente HTTP asíncrono
-    client = httpx.AsyncClient()
+#     # 1. Creamos el cliente HTTP asíncrono
+#     client = httpx.AsyncClient()
 
-    # 2. Conectamos de forma asíncrona a SQLite con aiosqlite
-    db_conn = await aiosqlite.connect("notes.db")
+#     # 2. Conectamos de forma asíncrona a SQLite con aiosqlite
+#     db_conn = await aiosqlite.connect("notes.db")
 
-    # Habilitamos esto para poder interactuar con la BD de forma segura en entornos async
-    await db_conn.execute("PRAGMA journal_mode=WAL;")
+#     # Habilitamos esto para poder interactuar con la BD de forma segura en entornos async
+#     await db_conn.execute("PRAGMA journal_mode=WAL;")
 
-    # 3. Creamos la tabla de notas asíncronamente si no existe
-    await db_conn.execute(
-        """
-        CREATE TABLE IF NOT EXISTS notes (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            content TEXT NOT NULL,
-            created_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime')),
-            updated_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))
-        )
-        """
-    )
+#     # 3. Creamos la tabla de notas asíncronamente si no existe
+#     await db_conn.execute(
+#         """
+#         CREATE TABLE IF NOT EXISTS notes (
+#             id INTEGER PRIMARY KEY AUTOINCREMENT,
+#             content TEXT NOT NULL,
+#             created_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime')),
+#             updated_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))
+#         )
+#         """
+#     )
 
-    await db_conn.commit()
+#     await db_conn.commit()
 
-    yield {
-        "http_client": client,
-        "db_connection": db_conn
-    }
+#     yield {
+#         "http_client": client,
+#         "db_connection": db_conn
+#     }
 
-    logger.info("Cerrando cliente compartidos para el servidor")
+#     logger.info("Cerrando cliente compartidos para el servidor")
     
-    await db_conn.close()
-    await client.aclose()
+#     await db_conn.close()
+#     await client.aclose()
 
 
 
