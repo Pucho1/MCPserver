@@ -1,9 +1,9 @@
-import aiosqlite
-from fastmcp import FastMCP, lifespan
+from fastmcp import FastMCP
+from fastmcp.server.lifespan import lifespan
+
 import httpx
-import logging
-
-
+import aiosqlite
+from core.logger import logger
 
 
 @lifespan
