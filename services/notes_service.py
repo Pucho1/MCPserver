@@ -1,8 +1,5 @@
 # validar -> insertar -> gestionar errores -> devolver resultado
 
-from aiosqlite import cursor
-
-
 class NotesService:
 
     def __init__(self, db_conn):
