@@ -209,20 +209,12 @@ async def get_single_note(
 
     # accedo a la conexion de la base de datos que cree en el lifespan a traves del context.lifespan_context 
     # y lo guardo en una variable para usarlo en esta funcion
-    db_conn = context.lifespan_context["db_connection"] 
+    notes_service = context.lifespan_context["notes_service"]
 
-    # hago la consulta a la base de datos de forma asíncrona usando aiosqlite
-    cursor = await db_conn.execute(
-        "SELECT * FROM notes WHERE id = ?",
-        (note_id,)
-    )
+    data_of_note = notes_service.get_single_note(note_id)
 
-    row = await cursor.fetchone()
+    return data_of_note
 
-    if row is None:
-       raise ValueError(f"No se encontró ninguna nota con id {note_id}")
-
-    return {"id": row[0], "content": row[1]}
 
 @mcp.tool()
 async def get_list_notes(context:Context,) -> dict:
@@ -284,6 +276,7 @@ async def update_note(
     await db_conn.commit()
 
     return f"Note updated with id {note_id}"
+
 
 @mcp.tool()
 async def delete_note(
