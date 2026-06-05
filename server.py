@@ -189,13 +189,15 @@ async def create_note(content: str, context: Context,) -> str:
         Create a note in the database.
     """
 
-    db_conn = context.lifespan_context["db_connection"]
+    # accedo a la conexion de la base de datos que cree en el lifespan a traves del context.lifespan_context
+    service = context.lifespan_context["notes_service"]
 
-    services_result = await NotesService(db_conn).create_note(content)
+
+    last_row_id = await service.create_note(content)
 
     # el lastrowid es un atributo del cursor que devuelve el id de la 
     # ultima fila insertada en la base de datos, en este caso el id de la nota que acabamos de crear.
-    return f"Note created with id {services_result.lastrowid}"
+    return f"Note created with id {last_row_id}"
 
 
 @mcp.tool()

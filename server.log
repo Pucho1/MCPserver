@@ -78,3 +78,11 @@
 2026-05-26 11:14:12,470 | INFO | ANTES -> method=tools/call tool=create_note
 2026-05-26 11:14:12,474 | INFO | DESPUES -> method=tools/call tool=create_note
 2026-05-26 11:14:12,477 | INFO | Cerrando cliente compartidos para el servidor
+2026-06-05 19:46:08,313 | INFO | Creando cliente compartiddos para el servidor
+2026-06-05 19:46:08,545 | INFO | ANTES -> method=tools/call tool=create_note
+2026-06-05 19:46:08,551 | INFO | DESPUES -> method=tools/call tool=create_note
+2026-06-05 19:46:08,554 | INFO | Cerrando cliente compartidos para el servidor
+2026-06-05 20:18:15,410 | INFO | Creando cliente compartiddos para el servidor
+2026-06-05 20:18:15,667 | INFO | ANTES -> method=tools/call tool=create_note
+2026-06-05 20:18:15,672 | INFO | DESPUES -> method=tools/call tool=create_note
+2026-06-05 20:18:15,677 | INFO | Cerrando cliente compartidos para el servidor

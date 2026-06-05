@@ -84,9 +84,9 @@ async def run():
             # Conectamos e inicializamos el canal IPC con el servidor FastMCP
             await session.initialize()
 
-            print("\n--- Listado de todas mis TOOLS ---\n")
-            tools = await session.list_tools()
-            pprint(tools.model_dump(), indent=2)
+            # print("\n--- Listado de todas mis TOOLS ---\n")
+            # tools = await session.list_tools()
+            # pprint(tools.model_dump(), indent=2)
 
 
             # print("--- PROBANDO TOOL: read_file ---")
@@ -114,13 +114,13 @@ async def run():
 
 
                     
-            print("--- PROBANDO TOOL: run_git_status ---")
-            new_result = await session.call_tool(
-                "run_git_status",
-                arguments={}
-            )
+            # print("--- PROBANDO TOOL: run_git_status ---")
+            # new_result = await session.call_tool(
+            #     "run_git_status",
+            #     arguments={}
+            # )
 
-            print(new_result.content[0].text)
+            # print(new_result.content[0].text)
 
 
 
@@ -157,15 +157,15 @@ async def run():
 
 
 
-            # print("--- PROBANDO TOOL: create_note ---")
-            # result = await session.call_tool(
-            #     "create_note",
-            #     arguments={
-            #         "content": "Esta es una nueva nota."
-            #     }
-            # )
+            print("--- PROBANDO TOOL: create_note ---")
+            result = await session.call_tool(
+                "create_note",
+                arguments={
+                    "content": "Esta es una nueva nota recien creada."
+                }
+            )
 
-            # print(result.content[0].text)
+            print(result.content[0].text)
 
             # print("--- PROBANDO TOOL: get_post ---")
             # result = await session.call_tool(
