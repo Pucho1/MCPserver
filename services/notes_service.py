@@ -9,7 +9,7 @@ class NotesService:
     async def create_note(
         self,
         content: str
-    ) -> int:
+    ):
 
         # hago la consulta a la base de datos de forma asíncrona usando aiosqlite
         cursor = await self.db_conn.execute(
@@ -20,5 +20,5 @@ class NotesService:
         # guardo los cambios en la base de datos
         await self.db_conn.commit()
 
-        return cursor.lastrowid
+        return cursor
  
