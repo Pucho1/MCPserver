@@ -13,6 +13,7 @@ import sys
 
 from core.mcp_instance import mcp
 from core.logger import logger
+from services.notes_service import NotesService
 
 class DebugMiddleware(Middleware):
 
@@ -185,19 +186,17 @@ async def get_post(
 @mcp.tool()
 async def create_note(content: str, context: Context,) -> str:
     """
-    Create a note in the database.
+        Create a note in the database.
     """
 
     db_conn = context.lifespan_context["db_connection"]
 
-    cursor = await db_conn.execute(
-        "INSERT INTO notes (content) VALUES (?)",
-        (content,)
-    )
+    services_result = await NotesService(db_conn).create_note(content)
 
-    await db_conn.commit()
+    # el lastrowid es un atributo del cursor que devuelve el id de la 
+    # ultima fila insertada en la base de datos, en este caso el id de la nota que acabamos de crear.
+    return f"Note created with id {services_result.lastrowid}"
 
-    return f"Note created with id {cursor.lastrowid}"
 
 @mcp.tool()
 async def get_single_note(
