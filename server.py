@@ -12,6 +12,7 @@ from core.mcp_instance import mcp
 from core.logger import logger
 from services.notes_service import NotesService
 from middleware.debug import DebugMiddleware
+from services import filesystem_service
 
 
 
@@ -39,24 +40,23 @@ def summarize_file(filename: str) -> str:
 async def list_files(path: str = ".") -> list[str]:
     # De aqui sale la descripcion de la tool
     """
-    List files in a directory. 
+    List files in a directory.
     """
 
-    import os
+    listed_files = filesystem_service.list_files(path)
 
-    return os.listdir(path)
+    return listed_files
+
 
 @mcp.tool()
 async def read_file(path: str) -> str:
     """
     Read a file content.
     """
+    file_content = filesystem_service.read_file(path)
 
-    from pathlib import Path
+    return file_content
 
-    return Path(path).read_text(
-        encoding="utf-8"
-    )
 
 
 @mcp.tool()
@@ -67,15 +67,9 @@ async def write_file(
     """
     Write content into a file.
     """
+    result = filesystem_service.write_file(path, content)
 
-    from pathlib import Path
-
-    Path(path).write_text(
-        content,
-        encoding="utf-8"
-    )
-
-    return "File written"
+    return result
 
 
 @mcp.tool()
@@ -86,14 +80,9 @@ async def create_directory(
     Create directory.
     """
 
-    from pathlib import Path
+    result = filesystem_service.create_directory(path)
 
-    Path(path).mkdir(
-        parents=True,
-        exist_ok=True
-    )
-
-    return "Directory created"
+    return result
 
 
 # ----- REST API ------
