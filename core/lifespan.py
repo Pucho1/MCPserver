@@ -5,6 +5,7 @@ import httpx
 import aiosqlite
 from core.logger import logger
 from services.notes_service import NotesService
+from services.rest_service import PostService
 
 
 @lifespan
@@ -19,7 +20,7 @@ async def app_lifespan(server: FastMCP):
     logger.info("Creando cliente compartiddos para el servidor")
 
     # 1. Creamos el cliente HTTP asíncrono
-    client = httpx.AsyncClient()
+    http_client = httpx.AsyncClient()
 
     # 2. Conectamos de forma asíncrona a SQLite con aiosqlite
     db_conn = await aiosqlite.connect("notes.db")
@@ -41,18 +42,22 @@ async def app_lifespan(server: FastMCP):
 
     await db_conn.commit()
 
-    notes_service = NotesService(
-        db_conn
-    )
+    # 4. Creamos instancias de los servicios que usaremos en las herramientas del servidor, 
+    # pasandoles las conexiones necesarias 
+    notes_service = NotesService( db_conn)
+
+    rest_service = PostService( http_client )
 
     yield {
-        "http_client": client,
+        "http_client": http_client,
         "db_connection": db_conn,
         "notes_service": notes_service,
+        "rest_service": rest_service,
     }
 
     logger.info("Cerrando cliente compartidos para el servidor")
     
+    # Cerramos las conexiones de forma asíncrona al apagar el servidor
     await db_conn.close()
-    await client.aclose()
+    await http_client.aclose()
 
