@@ -1,23 +1,21 @@
-from pathlib import Path
-
 from core.mcp_instance import mcp
 
-from schemas.write_file import (
-    WriteFileRequest
-)
+from services import filesystem_service
 
-# ----- TOOLS ------
+
+# ----- FILESYSTEM ------
 
 @mcp.tool()
 async def list_files(path: str = ".") -> list[str]:
     # De aqui sale la descripcion de la tool
     """
-    List files in a directory. 
+    List files in a directory.
     """
 
-    import os
+    listed_files = filesystem_service.list_files(path)
 
-    return os.listdir(path)
+    return listed_files
+
 
 @mcp.tool()
 async def read_file(path: str) -> str:
@@ -25,52 +23,23 @@ async def read_file(path: str) -> str:
     Read a file content.
     """
 
-    from pathlib import Path
+    file_content = filesystem_service.read_file(path)
 
-    return Path(path).read_text(
-        encoding="utf-8"
-    )
+    return file_content
+
 
 
 @mcp.tool()
 async def write_file(
-    request: WriteFileRequest
-):
+    path: str,
+    content: str,
+) -> str:
+    """
+    Write content into a file.
+    """
+    result = filesystem_service.write_file(path, content)
 
-    try:
-
-        file_path = Path(
-            request.path
-        )
-
-        if (
-            file_path.exists()
-            and
-            not request.overwrite
-        ):
-
-            raise FileExistsError(
-                "File already exists"
-            )
-
-        file_path.write_text(
-            request.content,
-            encoding="utf-8"
-        )
-
-        return "ok"
-
-    except PermissionError:
-
-        raise PermissionError(
-            "Permission denied"
-        )
-
-    except FileNotFoundError:
-
-        raise FileNotFoundError(
-            "Directory does not exist"
-        )
+    return result
 
 
 @mcp.tool()
@@ -81,13 +50,8 @@ async def create_directory(
     Create directory.
     """
 
-    from pathlib import Path
+    result = filesystem_service.create_directory(path)
 
-    Path(path).mkdir(
-        parents=True,
-        exist_ok=True
-    )
-
-    return "Directory created"
+    return result
 
 
