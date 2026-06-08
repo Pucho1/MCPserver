@@ -9,7 +9,6 @@ def list_files(path: str = ".") -> list[str]:
 
     return os.listdir(path)
 
-
 def read_file(path: str) -> str:
     """
     Read a file content.
@@ -22,9 +21,6 @@ def read_file(path: str) -> str:
     )
 
     return file_content
-
-    
-    
 
 def write_file(path: str, content: str) -> str:
     """
