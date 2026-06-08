@@ -1,8 +1,3 @@
-import asyncio
-import subprocess
-
-import sys
-
 from core.mcp_instance import mcp
 from middleware.debug import DebugMiddleware
 
@@ -21,8 +16,6 @@ import prompts.summarize
 mcp.add_middleware(
     DebugMiddleware()
 )
-
-
 
 
 if __name__ == "__main__":

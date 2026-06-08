@@ -13,10 +13,8 @@ import asyncio
 from anthropic import AsyncAnthropic
 from dotenv import load_dotenv
 from pprint import pprint
-import json
 import sys
 
-from server import get_post, update_note
 
 load_dotenv()  # Esto carga las variables del archivo .env antes de arrancar el cliente MCP
 
@@ -84,9 +82,9 @@ async def run():
             # Conectamos e inicializamos el canal IPC con el servidor FastMCP
             await session.initialize()
 
-            # print("\n--- Listado de todas mis TOOLS ---\n")
-            # tools = await session.list_tools()
-            # pprint(tools.model_dump(), indent=2)
+            print("\n--- Listado de todas mis TOOLS ---\n")
+            tools = await session.list_tools()
+            pprint(tools.model_dump(), indent=2)
 
 
             # print("--- PROBANDO TOOL: read_file ---")
@@ -113,6 +111,9 @@ async def run():
 
 
 
+
+
+            # -------- GIT ---------
                     
             # print("--- PROBANDO TOOL: run_git_status ---")
             # new_result = await session.call_tool(
@@ -124,13 +125,12 @@ async def run():
 
 
 
-
-
+            # -------- NOTES ---------
             
             # print("--- PROBANDO TOOL: delete_note ---")
             # new_result = await session.call_tool(
             #     "delete_note",
-            #     arguments={"note_id": 3}
+            #     arguments={"note_id": 1}
             # )
 
             # print(new_result.content[0].text)
@@ -157,15 +157,19 @@ async def run():
 
 
 
-            print("--- PROBANDO TOOL: create_note ---")
-            result = await session.call_tool(
-                "create_note",
-                arguments={
-                    "content": "Esta es una nueva nota recien creada."
-                }
-            )
+            # print("--- PROBANDO TOOL: create_note ---")
+            # result = await session.call_tool(
+            #     "create_note",
+            #     arguments={
+            #         "content": "Esta es una nueva nota."
+            #     }
+            # )
 
-            print(result.content[0].text)
+            # print(result.content[0].text)
+
+
+            # -------- REST API --------
+
 
             # print("--- PROBANDO TOOL: get_post ---")
             # result = await session.call_tool(
@@ -178,8 +182,7 @@ async def run():
             # print(result.content[0].text)
 
 
-
-
+            # -------- RESOURCES ---------
 
             # print("\n--- Listado de todos mis resources    ---\n")
             # resources = await session.list_resources()
@@ -190,6 +193,8 @@ async def run():
             # pprint(resource.model_dump(), indent=2)
 
 
+            # -------- PROMPTS ---------
+
             # print("\n--- Listado de todos mis prompts ---\n")
             # prompts = await session.list_prompts()
             # pprint(prompts.model_dump(), indent=2)
@@ -197,6 +202,9 @@ async def run():
             # print("\n--- Texto de mi prompt ---\n")
             # propmt = await session.get_prompt('summarize_file', arguments={"filename": "notes.txt"})
             # pprint(propmt.model_dump(), indent=2)
+
+
+            # -------- FILESYSTEM ---------
 
             
             # print("--- PROBANDO TOOL: write_file ---")
@@ -208,6 +216,40 @@ async def run():
             #     }
             # )
  
+
+            # print("--- PROBANDO TOOL: list_files ---")
+            # result = await session.call_tool(
+            #     "list_files",
+            #     arguments={
+            #         "path": "."
+            #     }
+            # )
+            # print("Archivos encontrados:")
+            # pprint(result.content[0].text)
+
+
+            # print("--- PROBANDO TOOL: write_file ---")
+            # result = await session.call_tool(
+            #     "write_file",
+            #     arguments={
+            #         "path": "notes.txt",
+            #         "content": "Hola MCP este es sun archivo nuevo creado desde el cliente."
+            #     }
+            # )
+            # print("Archivo escrito:")
+            # pprint(result.content[0].text)
+
+
+            # print("--- PROBANDO TOOL: create_directory ---")
+            # result = await session.call_tool(
+            #     "create_directory",
+            #     arguments={
+            #         "path": "new_directory"
+            #     }
+            # )
+            # print("Directorio creado:")
+            # pprint(result.content[0].text)
+
 
 
 if __name__ == "__main__":
