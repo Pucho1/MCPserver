@@ -1,4 +1,5 @@
 from time import perf_counter
+import uuid
 
 from fastmcp.server.middleware import (
     Middleware,
@@ -17,7 +18,10 @@ class DebugMiddleware(Middleware):
     ):
         tool_name = getattr(context.message, "name", "<sin nombre>")
         start = perf_counter()
-        tool_event = build_tool_event(tool=tool_name, status="start")
+        request_id = str(uuid.uuid4())
+
+
+        tool_event = build_tool_event(tool=tool_name, status="start", request_id=request_id,)
 
         logger.info(tool_event)
 
@@ -26,7 +30,7 @@ class DebugMiddleware(Middleware):
             result = await call_next(context) # Permite que la peticion fluya que no se corte en este midelware
 
         except Exception as e:
-            duration_ms = round((perf_counter() - start) * 1000, 2)
+            duration_ms = round((perf_counter() - start) * 1000, 2) # tiempo que tardo en ejecutarse la herramienta hasta que se produjo el error
             tool_event = build_tool_event(tool=tool_name, status="error", error=str(e), duration_ms=duration_ms)
             logger.error(tool_event)
             raise

@@ -3,6 +3,7 @@ def build_tool_event(
     status: str,
     duration_ms: int | None = None,
     error: str | None = None,
+    request_id: str | None = None
 ) -> dict:
     """
     Construye un evento de herramienta para su registro o envío a un sistema de observabilidad.
@@ -14,4 +15,5 @@ def build_tool_event(
         "status": status,
         "duration_ms": duration_ms,
         "error": error,
+        "request_id": request_id,
     }
