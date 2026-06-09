@@ -1,3 +1,5 @@
+from time import perf_counter
+
 from fastmcp.server.middleware import (
     Middleware,
     MiddlewareContext
@@ -14,7 +16,8 @@ class DebugMiddleware(Middleware):
         call_next
     ):
         tool_name = getattr(context.message, "name", "<sin nombre>")
-        tool_event = build_tool_event(tool=tool_name, status="started")
+        start = perf_counter()
+        tool_event = build_tool_event(tool=tool_name, status="start")
 
         logger.info(tool_event)
 
@@ -23,12 +26,14 @@ class DebugMiddleware(Middleware):
             result = await call_next(context) # Permite que la peticion fluya que no se corte en este midelware
 
         except Exception as e:
-            tool_event = build_tool_event(tool=tool_name, status="failed", error=str(e))
+            duration_ms = round((perf_counter() - start) * 1000, 2)
+            tool_event = build_tool_event(tool=tool_name, status="error", error=str(e), duration_ms=duration_ms)
             logger.error(tool_event)
             raise
 
+        duration_ms = round((perf_counter() - start) * 1000, 2)
 
-        tool_event = build_tool_event(tool=tool_name, status="completed")
+        tool_event = build_tool_event(tool=tool_name, status="success", duration_ms=duration_ms)
         logger.info(tool_event)
 
         return result
