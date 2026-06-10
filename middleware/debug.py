@@ -31,13 +31,24 @@ class DebugMiddleware(Middleware):
 
         except Exception as e:
             duration_ms = round((perf_counter() - start) * 1000, 2) # tiempo que tardo en ejecutarse la herramienta hasta que se produjo el error
-            tool_event = build_tool_event(tool=tool_name, status="error", error=str(e), duration_ms=duration_ms)
+            tool_event = build_tool_event(
+                tool=tool_name,
+                status="error",
+                error=str(e),
+                duration_ms=duration_ms,
+                request_id=request_id,
+            )
             logger.error(tool_event)
             raise
 
         duration_ms = round((perf_counter() - start) * 1000, 2)
 
-        tool_event = build_tool_event(tool=tool_name, status="success", duration_ms=duration_ms)
+        tool_event = build_tool_event(
+            tool=tool_name,
+            status="success",
+            duration_ms=duration_ms,
+            request_id=request_id,
+        )
         logger.info(tool_event)
 
         return result

@@ -10,10 +10,10 @@ def build_tool_event(
     """
 
     return {
+        "request_id": request_id,
         "event": "tool_call",
         "tool": tool,
         "status": status,
         "duration_ms": duration_ms,
         "error": error,
-        "request_id": request_id,
     }
