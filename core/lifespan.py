@@ -3,6 +3,7 @@ from fastmcp.server.lifespan import lifespan
 
 import httpx
 import aiosqlite
+
 from core.logger import logger
 from services.notes_service import NotesService
 from services.rest_service import PostService
