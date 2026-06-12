@@ -1,5 +1,6 @@
 from core.mcp_instance import mcp
 from middleware.debug import DebugMiddleware
+from config.settings import load_settings
 
 # ---Tools ---
 import tools.notes
@@ -18,5 +19,19 @@ mcp.add_middleware(
 )
 
 
+settings = load_settings()
+
+
 if __name__ == "__main__":
-    mcp.run(transport="stdio")
+    if settings.transport == "stdio":
+        mcp.run(
+            transport=settings.transport
+        )
+    elif settings.transport == "streamable-http":
+        mcp.run(
+            transport=settings.transport,
+            host=settings.host,
+            port=settings.port,
+        )
+    else:
+        raise ValueError(f"Unsupported transport: {settings.transport}")
