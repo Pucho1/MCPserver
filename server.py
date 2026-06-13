@@ -1,4 +1,5 @@
 from core.mcp_instance import mcp
+from middleware.auth import AuthMiddleware
 from middleware.debug import DebugMiddleware
 from config.settings import load_settings
 
@@ -14,13 +15,14 @@ import resources.filesystem
 # ---Prompts ---
 import prompts.summarize
 
+settings = load_settings()
+
+
 
 mcp.add_middleware(
-    DebugMiddleware()
+    DebugMiddleware(),
+    AuthMiddleware(),
 )
-
-
-settings = load_settings()
 
 
 if __name__ == "__main__":
