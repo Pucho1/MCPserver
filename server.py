@@ -6,6 +6,7 @@ from config.settings import load_settings
 import tools.notes
 import tools.filesystem
 import tools.rest_post
+import tools.health_check
 
 # ---Resources ---
 import resources.filesystem

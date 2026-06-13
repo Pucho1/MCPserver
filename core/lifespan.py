@@ -5,6 +5,7 @@ import httpx
 import aiosqlite
 
 from core.logger import logger
+from services.health_service import HealthService
 from services.notes_service import NotesService
 from services.rest_service import PostService
 
@@ -49,11 +50,14 @@ async def app_lifespan(server: FastMCP):
 
     rest_service = PostService( http_client )
 
+    health_service = HealthService(db_conn)
+
     yield {
         "http_client": http_client,
         "db_connection": db_conn,
         "notes_service": notes_service,
         "rest_service": rest_service,
+        "health_service": health_service,
     }
 
     logger.info("Cerrando cliente compartidos para el servidor")
