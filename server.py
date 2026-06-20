@@ -4,6 +4,7 @@ from middleware.debug import DebugMiddleware
 from config.settings import load_settings
 
 # ---Tools ---
+from middleware.ratel_imiter import RateLimitMiddleware
 import tools.notes
 import tools.filesystem
 import tools.rest_post
@@ -21,8 +22,15 @@ settings = load_settings()
 
 mcp.add_middleware(
     DebugMiddleware(),
-    AuthMiddleware(),
 )
+
+mcp.add_middleware(
+    AuthMiddleware(settings=settings),
+)
+
+# mcp.add_middleware(
+#     RateLimitMiddleware(requests_per_minute=settings.requests_per_minute),
+# )
 
 
 if __name__ == "__main__":

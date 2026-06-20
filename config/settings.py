@@ -11,6 +11,7 @@ class Settings:
     host: str = "127.0.0.1"
     transport: str = "stdio"
     api_key: str = "change-me"
+    requests_per_minute: int = 100  # Default rate limit for RateLimitMiddleware
 
 
 
