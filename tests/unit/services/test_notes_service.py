@@ -6,9 +6,9 @@ from services.notes_service import NotesService
 
 @pytest.fixture
 def notes_context():
-    db_mock = AsyncMock()
+    db_mock     = AsyncMock()
     cursor_mock = AsyncMock()
-    service = NotesService(db_mock)
+    service     = NotesService(db_mock)
 
     return {
         "db_mock": db_mock,
@@ -18,7 +18,7 @@ def notes_context():
 
 
 @pytest.mark.asyncio
-async def test_get_single_note_returns_note_when_exists():
+async def test_get_single_note_returns_note_when_exists(notes_context):
 
     # Éxito
     # execute() funciona
@@ -27,8 +27,8 @@ async def test_get_single_note_returns_note_when_exists():
 
     # Arrange
 
-    db_mock = AsyncMock()
-    cursor_mock = AsyncMock()
+    db_mock     = notes_context["db_mock"] # Obtengo el mock que preparé de la conexión a la base de datos
+    cursor_mock = notes_context["cursor_mock"]
 
     db_mock.execute.return_value = cursor_mock
 
@@ -37,7 +37,7 @@ async def test_get_single_note_returns_note_when_exists():
         "Hola"
     )
 
-    service = NotesService(db_mock)
+    service = notes_context["service"] # Recupero la instancia de NotesService que usa el mock de la base de datos
 
     # Act
 
@@ -52,18 +52,18 @@ async def test_get_single_note_returns_note_when_exists():
 
 
 @pytest.mark.asyncio
-async def test_get_single_note_returns_none_when_not_exists():
+async def test_get_single_note_returns_none_when_not_exists(notes_context):
     
     # Arrange
 
-    db_mock = AsyncMock()
-    cursor_mock = AsyncMock()
+    db_mock = notes_context["db_mock"]
+    cursor_mock = notes_context["cursor_mock"]
 
     db_mock.execute.return_value = cursor_mock
 
     cursor_mock.fetchone.return_value = None
 
-    service = NotesService(db_mock)
+    service = notes_context["service"] # Recupero la instancia de NotesService que usa el mock de la base de datos
 
     # Act & Assert
 
@@ -72,18 +72,18 @@ async def test_get_single_note_returns_none_when_not_exists():
 
 
 @pytest.mark.asyncio
-async def test_create_note_returns_lastrowid():
+async def test_create_note_returns_lastrowid(notes_context):
 
     #Arrange
-    db_mock     = AsyncMock() # Preparo un mock de la conexión a la base de datos
-    cursor_mock = AsyncMock() # Preparo un mock del cursor que se devuelve al ejecutar la consulta
+    db_mock     = notes_context["db_mock"] # Obtengo el mock que preparé de la conexión a la base de datos
+    cursor_mock = notes_context["cursor_mock"] # Obteno el mock del cursor que se devuelve al ejecutar la consulta
 
     db_mock.execute.return_value = cursor_mock # Cuando se llama a db_mock.execute, devuelve cursor_mock
 
     cursor_mock.lastrowid = 1
 
     #Act
-    service = NotesService(db_mock)
+    service = notes_context["service"] # Recupero la instancia de NotesService que usa el mock de la base de datos
     content = "Hola"
 
     result = await service.create_note(content)
@@ -102,14 +102,14 @@ async def test_create_note_returns_lastrowid():
 
 
 @pytest.mark.asyncio
-async def test_create_note_when_DB_fails_execution():
+async def test_create_note_when_DB_fails_execution(notes_context):
 
     # execute() lanza excepción
     # → commit() NO se ejecuta
     # → la excepción se propaga
 
     #Arrange
-    db_mock     = AsyncMock() # Preparo un mock de la conexión a la base de datos
+    db_mock = notes_context["db_mock"]
 
     db_mock.execute.side_effect = Exception("Database error")
 
@@ -126,7 +126,7 @@ async def test_create_note_when_DB_fails_execution():
 
 
 @pytest.mark.asyncio
-async def test_create_note_when_DB_fails_commit():
+async def test_create_note_when_DB_fails_commit(notes_context):
 
     # Fallo en commit()
     # execute() funciona
@@ -136,14 +136,14 @@ async def test_create_note_when_DB_fails_commit():
     # → la excepción se propaga
 
     #Arrange
-    db_mock     = AsyncMock() # Preparo un mock de la conexión a la base de datos
-    cursor_mock = AsyncMock()
+    db_mock     = notes_context["db_mock"] # Preparo un mock de la conexión a la base de datos
+    cursor_mock = notes_context["cursor_mock"]
 
     db_mock.execute.return_value = cursor_mock # Cuando se llama a db_mock.execute, devuelve cursor_mock
     db_mock.commit.side_effect = Exception("Commit error")
 
     #Act
-    service = NotesService(db_mock) # LLamo al constructor de NotesService con el mock de la base de datos
+    service = notes_context["service"] # Recupero la instancia de NotesService que usa el mock de la base de datos
     content = "Hola" # Preparo la data para ejecutar la función create_note
 
     # Assert
