@@ -4,6 +4,18 @@ import pytest
 
 from services.notes_service import NotesService
 
+@pytest.fixture
+def notes_context():
+    db_mock = AsyncMock()
+    cursor_mock = AsyncMock()
+    service = NotesService(db_mock)
+
+    return {
+        "db_mock": db_mock,
+        "cursor_mock": cursor_mock,
+        "service": service,
+    }
+
 
 @pytest.mark.asyncio
 async def test_get_single_note_returns_note_when_exists():
