@@ -1,6 +1,8 @@
 from unittest.mock import AsyncMock
 
+import aiosqlite
 import pytest
+import pytest_asyncio
 
 from services.notes_service import NotesService
 
@@ -16,6 +18,36 @@ def notes_context():
         "service": service,
     }
 
+
+@pytest_asyncio.fixture
+async def real_notes_context():
+
+    connection = await aiosqlite.connect(":memory:") # Conexión a una base de datos SQLite en memoria para pruebas
+
+    # Creo la tabla notes en la base de datos en memoria
+    await connection.execute(
+        """
+        CREATE TABLE IF NOT EXISTS notes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            content TEXT NOT NULL,
+            created_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime')),
+            updated_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))
+        )
+        """
+    ) 
+ 
+    await connection.commit() # Confirmo los cambios en la base de datos
+
+    service = NotesService(connection) # Creo una instancia de NotesService usando la conexión a la base de datos en memoria
+
+    yield { # yield permite que la función fixture devuelva un valor y luego continúe ejecutándose después de que la prueba haya terminado
+        "connection": connection,
+        "service": service,
+    } 
+
+    # TEARDOWN
+
+    await connection.close() # Cierro la conexión a la base de datos en memoria después de que la prueba haya terminado
 
 @pytest.mark.asyncio
 async def test_get_single_note_returns_note_when_exists(notes_context):
@@ -415,3 +447,26 @@ async def test_delete_note_when_db_fails_commit(notes_context):
         await service.delete_note(note_id)
 
     db_mock.commit.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_integration_create_and_get_note(real_notes_context):
+
+    # Arrange
+    connection = real_notes_context["connection"]
+    service = real_notes_context["service"]
+    content = "Contenido de prueba"
+
+    # Act
+    result = await service.create_note(content) # Creo una nota de prueba en la base de datos en memoria y obtengo el ID
+
+    # Assert
+    cursor = await connection.execute(
+        "SELECT id, content FROM notes WHERE id = ?",
+        (result,)
+    )
+
+    row = await cursor.fetchone()
+    assert row is not None
+    assert row[0] == result
+    assert row[1] == content
