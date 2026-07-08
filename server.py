@@ -32,8 +32,7 @@ mcp.add_middleware(
 #     RateLimitMiddleware(requests_per_minute=settings.requests_per_minute),
 # )
 
-
-if __name__ == "__main__":
+def main():
     if settings.transport == "stdio":
         mcp.run(
             transport=settings.transport
@@ -46,3 +45,7 @@ if __name__ == "__main__":
         )
     else:
         raise ValueError(f"Unsupported transport: {settings.transport}")
+
+
+if __name__ == "__main__":
+    main()
