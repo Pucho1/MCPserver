@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import logging
 import json
 
@@ -9,7 +9,7 @@ class JsonFormatter(logging.Formatter):
     ) -> str:
 
         base_event = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "level": record.levelname,
         }
 
@@ -34,12 +34,9 @@ logger = logging.getLogger("mcp_server")
 logger.setLevel(logging.INFO)
 
 if not logger.handlers:
-    handler = logging.FileHandler("server.log", encoding="utf-8")
+    handler = logging.StreamHandler() # Se emiten los logs en la consola para que asi la infraestructura de despliegue (docker, kubernetes, etc) pueda capturarlos y redirigirlos a donde corresponda (archivos, servicios de log, etc)
 
     formatter = JsonFormatter() # para que mis logs se guarden en formato json y sean mas faciles de parsear y analizar
 
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-
-
-    # formatter = logging.Formatter("%(asctime)s | %(levelname)s | %(message)s")
