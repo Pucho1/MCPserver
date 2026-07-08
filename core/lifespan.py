@@ -8,6 +8,7 @@ from core.logger import logger
 from services.health_service import HealthService
 from services.notes_service import NotesService
 from services.rest_service import PostService
+from config.settings import load_settings
 
 
 @lifespan
@@ -24,8 +25,10 @@ async def app_lifespan(server: FastMCP):
     # 1. Creamos el cliente HTTP asíncrono
     http_client = httpx.AsyncClient()
 
+    settings = load_settings()
+
     # 2. Conectamos de forma asíncrona a SQLite con aiosqlite
-    db_conn = await aiosqlite.connect("notes.db")
+    db_conn = await aiosqlite.connect(settings.db_path)
 
     # Habilitamos esto para poder interactuar con la BD de forma segura en entornos async
     await db_conn.execute("PRAGMA journal_mode=WAL;")

@@ -12,6 +12,7 @@ class Settings:
     transport: str = "stdio"
     api_key: str = "change-me"
     requests_per_minute: int = 100  # Default rate limit for RateLimitMiddleware
+    db_path: str = "notes.db"
 
 
 
@@ -24,4 +25,5 @@ def load_settings() -> Settings:
         host=os.getenv("HOST", Settings.host),
         transport=os.getenv("TRANSPORT", Settings.transport),
         api_key=os.getenv("MCP_API_KEY", Settings.api_key),
+        db_path=os.getenv("DB_PATH", Settings.db_path),
     )
