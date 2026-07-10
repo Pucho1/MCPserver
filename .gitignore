@@ -12,3 +12,7 @@ wheels/
 .env
 *.log
 notes.txt
+
+# artefactos SQLite
+*.db-shm
+*.db-wal
