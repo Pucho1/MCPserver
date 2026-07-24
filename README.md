@@ -1,14 +1,36 @@
 # MCP Logging and Progress Demo
 
-A demonstration of the Model Context Protocol using a STDIO transport.
+A demonstration of the Model Context Protocol using a STDIO transport with production-grade observability via Langfuse tracing.
 
-## Setup
+## Quick Start
+
+### Setup
 
 Install dependencies using uv:
 
 ```bash
 uv sync
 ```
+
+### Configuration
+
+Create or update your `.env` file with Langfuse credentials:
+
+```bash
+# Langfuse Tracing
+LANGFUSE_SECRET_KEY="sk-lf-..."
+LANGFUSE_PUBLIC_KEY="pk-lf-..."
+LANGFUSE_BASE_URL="https://cloud.langfuse.com"
+
+# MCP Server
+TRANSPORT=streamable-http
+HOST=127.0.0.1
+PORT=8000
+MCP_API_KEY=your-api-key
+DB_PATH="test-runtime.db"
+```
+
+Get your Langfuse credentials from [Langfuse Cloud](https://cloud.langfuse.com/) or self-hosted instance.
 
 ## Running the Project
 
@@ -17,6 +39,41 @@ Run the MCP client:
 ```bash
 uv run client.py
 ```
+
+Run the MCP server:
+
+```bash
+uv run server.py
+```
+
+## Observability & Tracing
+
+This project includes **production-grade distributed tracing** via Langfuse. Every MCP tool call, service method, and database operation is automatically traced.
+
+### Key Features
+
+- ✅ **Automatic Tool Tracing**: Every MCP tool call is traced with timing and errors
+- ✅ **Service-Level Observability**: Track database operations and API calls
+- ✅ **Middleware Integration**: Protocol-level tracing without code changes
+- ✅ **Error Tracking**: Detailed error context and stack traces
+- ✅ **Performance Monitoring**: Latency metrics for all operations
+- ✅ **Session Tracking**: Correlate related traces across requests
+
+### Accessing Traces
+
+1. Sign in to [Langfuse Cloud](https://cloud.langfuse.com/)
+2. Navigate to your project
+3. View traces for the "mcp-server" session
+4. Filter by operation name or tags
+
+### Integration Details
+
+See [LANGFUSE_INTEGRATION.md](LANGFUSE_INTEGRATION.md) for comprehensive documentation on:
+- Setup and configuration
+- How tracing is implemented
+- Best practices for adding custom tracing
+- Performance considerations
+- Troubleshooting
 
 ## Arquitectura completa del servidor MCP
 

@@ -1,5 +1,7 @@
 # validar -> insertar -> gestionar errores -> devolver resultado
 
+from core.tracing import trace_service
+
 class NotesService:
 
     def __init__(self, db_conn):
@@ -10,6 +12,7 @@ class NotesService:
     # cada función se encargará de una tarea concreta, como crear una nota, 
     # obtener una nota, actualizar una nota o eliminar una nota.
 
+    @trace_service
     async def create_note(
         self,
         content: str
@@ -29,6 +32,7 @@ class NotesService:
         return cursor.lastrowid
  
 
+    @trace_service
     async def get_single_note(
         self,
         note_id: int
@@ -49,6 +53,7 @@ class NotesService:
         return {"id": row[0], "content": row[1]}
 
 
+    @trace_service
     async def get_all_notes(self) -> dict:
         
         # hago la consulta a la base de datos de forma asíncrona usando aiosqlite
@@ -64,6 +69,7 @@ class NotesService:
         return {"notes": [{"id": row[0], "content": row[1]} for row in rows]}
 
 
+    @trace_service
     async def update_note(
         self,
         note_id: int,
@@ -96,6 +102,7 @@ class NotesService:
         return f"Nota {note_id} actualizada correctamente"
     
 
+    @trace_service
     async def delete_note(
         self,
         note_id: int

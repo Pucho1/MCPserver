@@ -1,9 +1,11 @@
 from fastmcp import Context
 from core.mcp_instance import mcp
+from core.tracing import trace_tool
 
 # ----- SQLITE ------
 
 @mcp.tool()
+@trace_tool
 async def create_note(content: str, context: Context,) -> str:
     """
     Create a note in the database.
@@ -19,6 +21,7 @@ async def create_note(content: str, context: Context,) -> str:
 
 
 @mcp.tool()
+@trace_tool
 async def get_single_note(
     note_id:int,
     context:Context,
@@ -37,6 +40,7 @@ async def get_single_note(
 
 
 @mcp.tool()
+@trace_tool
 async def get_list_notes(context:Context,) -> dict:
     """
     Fetch all notes from the database.
@@ -50,6 +54,7 @@ async def get_list_notes(context:Context,) -> dict:
 
 
 @mcp.tool()
+@trace_tool
 async def update_note(
     note_id: int,
     new_content: str,
@@ -67,6 +72,7 @@ async def update_note(
 
 
 @mcp.tool()
+@trace_tool
 async def delete_note(
     note_id: int,
     context: Context,

@@ -1,9 +1,11 @@
 from fastmcp import Context
 from core.mcp_instance import mcp
+from core.tracing import trace_tool
 
 # ----- REST API ------
 
 @mcp.tool()
+@trace_tool
 async def get_post(
     post_id: int,
     context: Context

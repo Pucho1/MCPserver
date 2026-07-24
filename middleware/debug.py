@@ -6,7 +6,8 @@ from fastmcp.server.middleware import (
     MiddlewareContext
 )
 from core.logger import logger
-from core.observability import build_tool_event
+from core.observabiity.observability import build_tool_event
+from core.langfuse_config import langfuse_client
 
 
 class DebugMiddleware(Middleware):
@@ -18,6 +19,7 @@ class DebugMiddleware(Middleware):
     - medir cuánto tarda,
     - generar un id único por petición,
     - registrar un evento de inicio, éxito o error.
+    - integrar con Langfuse para trazabilidad distribuida.
 
     Esto centraliza el logging técnico en un solo punto y evita repetir
     esta lógica dentro de cada herramienta individual.
@@ -52,6 +54,15 @@ class DebugMiddleware(Middleware):
         )
 
         logger.info(tool_event)
+        
+        # Create a Langfuse span for this tool call if available
+        langfuse_span = None
+        if langfuse_client:
+            langfuse_span = langfuse_client.span(
+                name=tool_name,
+                input={"request_id": request_id},
+                tags=["tool-call"],
+            )
 
         try:
             # `call_next` delega la ejecución al siguiente middleware o a la
@@ -70,6 +81,19 @@ class DebugMiddleware(Middleware):
                 request_id=request_id,
             )
             logger.error(tool_event)
+            
+            # Record error in Langfuse
+            if langfuse_span:
+                langfuse_span.update(
+                    metadata={
+                        "status": "error",
+                        "error": str(e),
+                        "error_type": type(e).__name__,
+                        "duration_ms": duration_ms,
+                        "request_id": request_id,
+                    }
+                )
+            
             # Re-lanzamos la excepción para no ocultar el error real al resto
             # del sistema; este middleware solo observa y registra.
             raise
@@ -84,6 +108,17 @@ class DebugMiddleware(Middleware):
             request_id=request_id,
         )
         logger.info(tool_event)
+        
+        # Record success in Langfuse
+        if langfuse_span:
+            langfuse_span.update(
+                output={"status": "success", "request_id": request_id},
+                metadata={
+                    "status": "success",
+                    "duration_ms": duration_ms,
+                    "request_id": request_id,
+                }
+            )
 
         # Devolvemos el resultado original para no alterar el comportamiento
         # normal de la herramienta, solo enriquecerlo con observabilidad.

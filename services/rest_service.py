@@ -1,4 +1,5 @@
 from core.logger import logger
+from core.tracing import trace_service
 import httpx
 
 
@@ -10,6 +11,7 @@ class PostService:
         self.http_client = http_client
 
 
+    @trace_service
     async def get_post(self, post_id: int) -> dict:
 
         try:
