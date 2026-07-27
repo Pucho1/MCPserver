@@ -20,6 +20,11 @@ pipeline {
             }
         }
 
+        stage('Run tests') {
+            steps {
+                sh 'uv run pytest'
+            }
+        }
     }
 
     post {
@@ -27,4 +32,6 @@ pipeline {
             echo 'Pipeline finished.'
         }
     }
+
+    
 }
