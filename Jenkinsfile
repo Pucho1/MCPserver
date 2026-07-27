@@ -1,38 +1,16 @@
 pipeline {
-    agent any  // "Ejecuta este pipeline en cualquier nodo disponible.
+    agent any
 
     stages {
 
-        stage('Checkout OK') {
+        stage('Environment') { // Verifico toda mi infraestructura
             steps {
-                echo 'Repository cloned successfully.'
-            }
-        }
-
-        stage('Inspect Environment') {
-            steps {
-
-                echo '=== USER ==='
-                sh 'whoami'
-
-                echo '=== WORKSPACE ==='
-                sh 'pwd'
-
-                echo '=== OS ==='
-                sh 'uname -a'
-
-                echo '=== GIT ==='
+                sh 'python3 --version'
+                sh 'uv --version'
                 sh 'git --version'
-
-                echo '=== PYTHON ==='
-                sh 'python3 --version || true'
-
-                echo '=== UV ==='
-                sh 'uv --version || true'
-
-                echo '=== DOCKER ==='
-                sh 'docker --version || true'
-
+                sh 'docker --version'
+                sh 'node --version'
+                sh 'npm --version'
             }
         }
 
@@ -41,14 +19,6 @@ pipeline {
     post {
         always {
             echo 'Pipeline finished.'
-        }
-
-        success {
-            echo 'Pipeline SUCCESS'
-        }
-
-        failure {
-            echo 'Pipeline FAILED'
         }
     }
 }
