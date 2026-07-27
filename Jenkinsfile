@@ -22,7 +22,14 @@ pipeline {
 
         stage('Run tests') {
             steps {
-                sh 'uv run pytest'
+                sh 'mkdir -p reports'
+                sh 'uv run pytest --junitxml=reports/junit.xml'
+            }
+            
+            post {
+                always {
+                    junit 'reports/junit.xml'
+                }
             }
         }
 
