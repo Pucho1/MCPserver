@@ -31,6 +31,12 @@ pipeline {
                 sh 'uv build'
             }
         }
+
+        stage('Build Docker image') {
+            steps {
+                sh 'docker build -t sampling-server:ci .'
+            }
+        }
     }
 
     post {
