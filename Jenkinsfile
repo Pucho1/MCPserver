@@ -25,6 +25,12 @@ pipeline {
                 sh 'uv run pytest'
             }
         }
+
+        stage('Build package') {
+            steps {
+                sh 'uv build'
+            }
+        }
     }
 
     post {
