@@ -14,6 +14,12 @@ pipeline {
             }
         }
 
+        stage('Install dependencies') {
+            steps {
+                sh 'uv sync'
+            }
+        }
+
     }
 
     post {
