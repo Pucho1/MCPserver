@@ -38,7 +38,7 @@ pipeline {
                 script {
                     def scannerHome = tool 'SonarScanner' // Dame la ruta donde está instalada la herramienta llamada SonarScannerc
 
-                    withSonarQubeEnv('Sonarqube') {
+                    withSonarQubeEnv('SonarQube') {
                         sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
