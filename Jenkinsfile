@@ -33,6 +33,18 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    def scannerHome = tool 'SonarScanner' // Dame la ruta donde está instalada la herramienta llamada SonarScannerc
+
+                    withSonarQubeEnv('Sonarqube') {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
+                }
+            }
+        }
+
         stage('Build package') {
             steps {
                 sh 'uv build'
