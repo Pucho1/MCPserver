@@ -38,6 +38,36 @@ include = [
     "tools*",
 ]
 
+
+[tool.coverage.run]
+branch = true
+source = [
+    "config",
+    "core",
+    "middleware",
+    "prompts",
+    "resources",
+    "schemas",
+    "services",
+    "tools",
+    "server"
+]
+
+omit = [
+    "tests/*",
+    ".venv/*"
+]
+
+[tool.coverage.xml]
+output = "reports/coverage.xml"
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+
+[tool.coverage.html]
+directory = "reports/htmlcov"
+
 [project.scripts]
 mcp-server = "server:main"
 
