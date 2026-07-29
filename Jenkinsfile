@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'pucho1/sampling-mcp'
-        IMAGE_TAG = '0.1.0'
+        DOCKER_IMAGE = 'pucho1/sampling-mcp'
+        IMAGE_VERSION = '0.1.0'
     }
 
     stages {
