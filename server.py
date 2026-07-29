@@ -20,9 +20,9 @@ settings = load_settings()
 
 
 
-# mcp.add_middleware(
-#     DebugMiddleware(),
-# )
+mcp.add_middleware(
+    DebugMiddleware(),
+)
 
 mcp.add_middleware(
     AuthMiddleware(settings=settings),
