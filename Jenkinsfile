@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'pucho1/sampling-mcp'
-        IMAGE_VERSION = '0.1.0'
+        IMAGE_VERSION = '0.1.1'
     }
 
     stages {
