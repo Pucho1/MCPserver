@@ -60,8 +60,8 @@ pipeline {
             steps {
                 sh  '''
                     docker build \
-                    -t ${IMAGE_NAME}:${IMAGE_TAG} \
-                    -t ${IMAGE_NAME}:latest \
+                    -t ${DOCKER_IMAGE}:${IMAGE_VERSION} \
+                    -t ${DOCKER_IMAGE}:latest \
                     .
                 '''
             }
