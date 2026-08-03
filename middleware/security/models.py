@@ -3,7 +3,7 @@ from typing import FrozenSet
 
 
 @dataclass(frozen=True, slots=True)
-class AuthenticatedUser:
+class AuthenticatedPrincipal:
     subject: str
     issuer: str
     audience: str

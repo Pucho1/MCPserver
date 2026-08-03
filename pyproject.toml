@@ -10,6 +10,8 @@ dependencies = [
     "mcp>=1.9.3",
     "langfuse>=3.11.0",
     "python-dotenv>=1.0.0",
+    "pyjwt>=2.12.1",
+    "cryptography>=47.0.0",
 ]
 
 [dependency-groups]
