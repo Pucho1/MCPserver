@@ -5,8 +5,10 @@ from fastmcp.server.middleware import (
 )
 from mcp import ErrorData, McpError
 
+from config.settings import Settings
+
 class AuthMiddleware(Middleware):
-    def __init__(self, settings):
+    def __init__(self, settings: Settings):
         self.api_key = settings.api_key
     
 
@@ -14,6 +16,7 @@ class AuthMiddleware(Middleware):
         try:
 
             print(f"Context info====>: {context.message}")
+            print(f"Context ===>: {context}")
 
             params = context.message.params
 
