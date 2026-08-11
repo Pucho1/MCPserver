@@ -3,7 +3,7 @@ import logging
 import json
 
 class JsonFormatter(logging.Formatter):
-     def format(
+    def format(
         self,
         record: logging.LogRecord # el mensaje que se va a loguear, con toda su metadata (timestamp, level, etc)
     ) -> str:
